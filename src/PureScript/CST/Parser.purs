@@ -250,7 +250,7 @@ parseDeclClassSignature keyword = do
 
 parseDeclClass1 :: SourceToken -> Parser (Recovered Declaration)
 parseDeclClass1 keyword = do
-  super <- optional $ try $ Tuple <$> parseClassConstraints parseType5 <*> tokLeftFatArrow
+  super <- optional $ try $ Tuple <$> parseClassConstraints parseType5 <*> tokSuperClassArrow
   name <- parseProper
   vars <- many parseTypeVarBindingPlain
   fundeps <- optional $ Tuple <$> tokPipe <*> separated tokComma parseFundep
@@ -1016,9 +1016,9 @@ tokRightFatArrow = expect case _ of
   TokRightFatArrow _ -> true
   _ -> false
 
-tokLeftFatArrow :: Parser SourceToken
-tokLeftFatArrow = expect case _ of
-  TokOperator Nothing name -> name == "<=" || name == "⇐"
+tokSuperClassArrow :: Parser SourceToken
+tokSuperClassArrow = expect case _ of
+  TokOperator Nothing name -> name == "<=" || name == "⇐" || name == "=|" || name == "⫤"
   _ -> false
 
 tokRightArrow :: Parser SourceToken
